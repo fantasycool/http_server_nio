@@ -9,6 +9,11 @@ import java.nio.channels.SocketChannel;
 public class Socket {
     private SocketChannel socketChannel;
 
+    public Socket(SocketChannel socketChannel) {
+
+        this.socketChannel = socketChannel;
+    }
+
     public SocketChannel getSocketChannel() {
         return socketChannel;
     }
