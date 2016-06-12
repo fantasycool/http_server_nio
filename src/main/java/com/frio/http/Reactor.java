@@ -23,16 +23,16 @@ public class Reactor implements Runnable {
         try {
             Selector selector = Selector.open();
             ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-            serverSocketChannel.bind(new InetSocketAddress(server.getInetAddress(), server.getPort()));
+            serverSocketChannel.socket().bind(new InetSocketAddress(server.getInetAddress(), server.getPort()));
+            serverSocketChannel.configureBlocking(false);
             SelectionKey selectionKey = serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
             while(true) {
                 if(server.isShutDown){
                     System.out.println("shutdown server now!");
                     break;
                 }
-                int s = selector.select();
-                SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
-                Socket socket = new Socket(socketChannel);
+                selector.select();
+                Socket socket = new Socket(serverSocketChannel.accept());
                 boolean b = server.acceptedSockets.offer(socket);
                 if (!b){
                     //TODO
